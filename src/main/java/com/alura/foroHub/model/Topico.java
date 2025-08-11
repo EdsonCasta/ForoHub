@@ -1,7 +1,6 @@
 package com.alura.foroHub.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +20,17 @@ public class Topico {
     private String status;
     private String autor;
     private  String curso;
+
+    public Topico() {}
+
+    public Topico(String titulo, String mensaje, String autor, String curso) {
+        this.titulo = titulo;
+        this.mensaje = mensaje;
+        this.autor = autor;
+        this.curso = curso;
+        this.fechaCreacion = LocalDateTime.now();
+        this.status = "ACTIVO";
+    }
 
     public Long getId() {
         return id;
