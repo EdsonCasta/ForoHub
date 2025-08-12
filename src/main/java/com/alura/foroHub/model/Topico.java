@@ -1,6 +1,9 @@
 package com.alura.foroHub.model;
 
+import com.alura.foroHub.dto.DatosTopico;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,6 +33,22 @@ public class Topico {
         this.curso = curso;
         this.fechaCreacion = LocalDateTime.now();
         this.status = "ACTIVO";
+    }
+
+    public void actualizarInfo(@Valid DatosTopico datos) {
+
+        if (datos.titulo() != null) {
+            this.titulo = datos.titulo();
+        }
+        if (datos.mensaje() != null) {
+            this.mensaje = datos.mensaje();
+        }
+        if (datos.autor() != null) {
+            this.autor = datos.autor();
+        }
+        if (datos.curso() != null) {
+            this.curso = datos.curso();
+        }
     }
 
     public Long getId() {

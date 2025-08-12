@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -63,4 +65,26 @@ public class TopicoController {
 
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity actualizar(@PathVariable Long id, @RequestBody @Valid DatosTopico datos) {
+        if (id == null || id <= 0) {
+            return ResponseEntity.badRequest()
+                    .body("El campo ID es obligatorio y debe ser mayor que cero");
+        }
+
+        Optional<Topico> topicoId = repository.findById(id);
+
+        if (!topicoId.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Tópico no encontrado");
+        }
+
+        Topico topico = topicoId.get();
+        topico.actualizarInfo(datos);
+
+        return ResponseEntity.ok(new DatosDetalleTopico(topico));
+    }
+
 }
