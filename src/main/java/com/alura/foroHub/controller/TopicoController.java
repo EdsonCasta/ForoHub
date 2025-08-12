@@ -69,6 +69,7 @@ public class TopicoController {
     @Transactional
     @PutMapping("/{id}")
     public ResponseEntity actualizar(@PathVariable Long id, @RequestBody @Valid DatosTopico datos) {
+
         if (id == null || id <= 0) {
             return ResponseEntity.badRequest()
                     .body("El campo ID es obligatorio y debe ser mayor que cero");
@@ -87,4 +88,22 @@ public class TopicoController {
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
 
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarTopico(@PathVariable Long id) {
+
+        if (id == null || id <= 0) {
+            return ResponseEntity.badRequest().body("El ID es obligatorio y debe ser mayor que cero");
+        }
+
+        Optional<Topico> topicoOptional = repository.findById(id);
+        if (!topicoOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El tópico con ID " + id + " no existe.");
+        }
+
+        repository.deleteById(id);
+
+        return ResponseEntity.ok("Tópico con ID " + id + " eliminado con éxito.");
+    }
 }
