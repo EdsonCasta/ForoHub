@@ -1,8 +1,11 @@
 package com.alura.foroHub.controller;
 
+import com.alura.foroHub.dto.DatosDetalleTopico;
 import com.alura.foroHub.dto.DatosTopico;
 import com.alura.foroHub.model.Topico;
 import com.alura.foroHub.repository.TopicoRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,4 +51,16 @@ public class TopicoController {
         return ResponseEntity.ok(topicos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalle(@PathVariable Long id) {
+
+        if (id == null || id <= 0) {
+            return ResponseEntity.badRequest().body("El campo ID es obligatorio y debe ser mayor que cero");
+        }
+
+        var topico = repository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Topico no encontrado"));
+
+        return ResponseEntity.ok(new DatosDetalleTopico(topico));
+    }
 }
