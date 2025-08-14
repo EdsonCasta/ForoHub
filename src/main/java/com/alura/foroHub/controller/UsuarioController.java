@@ -6,6 +6,7 @@ import com.alura.foroHub.usuario.Usuario;
 import com.alura.foroHub.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +18,13 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping
     public ResponseEntity<DatosDetalleUsuario> registrarUsuario(@RequestBody DatosRegistroUsuario datos) {
-        Usuario usuario = new Usuario(null, datos.usuario(), datos.contrasena());
+        String contrasenaEncriptada = passwordEncoder.encode(datos.contrasena());
+        Usuario usuario = new Usuario(null, datos.usuario(), contrasenaEncriptada);
         repository.save(usuario);
         return ResponseEntity.ok(new DatosDetalleUsuario(usuario));
     }
@@ -39,13 +44,23 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DatosDetalleUsuario> actualizarUsuario(@PathVariable Long id, @RequestBody DatosRegistroUsuario datos) {
+    public ResponseEntity<DatosDetalleUsuario> actualizarUsuario(
+            @PathVariable Long id,
+            @RequestBody DatosRegistroUsuario datos) {
         return repository.findById(id).map(usuario -> {
-            usuario = new Usuario(id, datos.usuario(), datos.contrasena());
+
+            usuario.setUsuario(datos.usuario());
+
+            if (datos.contrasena() != null && !datos.contrasena().isBlank()) {
+                if (!passwordEncoder.matches(datos.contrasena(), usuario.getContrasena())) {
+                    usuario.setContrasena(passwordEncoder.encode(datos.contrasena()));
+                }
+            }
             repository.save(usuario);
             return ResponseEntity.ok(new DatosDetalleUsuario(usuario));
         }).orElse(ResponseEntity.notFound().build());
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
