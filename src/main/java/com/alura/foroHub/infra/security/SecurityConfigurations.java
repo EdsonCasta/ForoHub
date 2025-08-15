@@ -1,4 +1,4 @@
-package com.alura.foroHub.security;
+package com.alura.foroHub.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

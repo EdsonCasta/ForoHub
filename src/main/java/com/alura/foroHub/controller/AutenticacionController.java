@@ -1,8 +1,8 @@
 package com.alura.foroHub.controller;
 
 import com.alura.foroHub.dto.DatosAutenticacion;
-import com.alura.foroHub.security.DatosTokenJWT;
-import com.alura.foroHub.security.TokenService;
+import com.alura.foroHub.infra.security.DatosTokenJWT;
+import com.alura.foroHub.infra.security.TokenService;
 import com.alura.foroHub.usuario.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

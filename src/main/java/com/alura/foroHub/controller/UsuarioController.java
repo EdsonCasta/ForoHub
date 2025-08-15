@@ -4,6 +4,7 @@ import com.alura.foroHub.dto.DatosDetalleUsuario;
 import com.alura.foroHub.dto.DatosRegistroUsuario;
 import com.alura.foroHub.usuario.Usuario;
 import com.alura.foroHub.usuario.UsuarioRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,7 @@ public class UsuarioController {
     }
 
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     public List<DatosDetalleUsuario> listarUsuarios() {
         return repository.findAll().stream()
                 .map(DatosDetalleUsuario::new)
@@ -37,6 +39,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<DatosDetalleUsuario> obtenerUsuario(@PathVariable Long id) {
         return repository.findById(id)
                 .map(usuario -> ResponseEntity.ok(new DatosDetalleUsuario(usuario)))
@@ -44,6 +47,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<DatosDetalleUsuario> actualizarUsuario(
             @PathVariable Long id,
             @RequestBody DatosRegistroUsuario datos) {
@@ -63,6 +67,7 @@ public class UsuarioController {
 
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);

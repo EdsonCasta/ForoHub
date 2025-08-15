@@ -1,4 +1,4 @@
-package com.alura.foroHub.security;
+package com.alura.foroHub.infra.security;
 
 import com.alura.foroHub.usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
